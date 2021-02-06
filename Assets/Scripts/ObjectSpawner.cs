@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
@@ -41,7 +41,7 @@ public class ObjectSpawner : MonoBehaviour
             return;
         }
 
-        if(raycastManager.Raycast(touchPosition, hits, TrackableType.PlaneWithinPolygon))
+        if (raycastManager.Raycast(touchPosition, hits, TrackableType.PlaneWithinPolygon))
         {
             var hitPose = hits[0].pose;
             SpawnPrefab(hitPose);
@@ -55,7 +55,10 @@ public class ObjectSpawner : MonoBehaviour
 
     public void SpawnPrefab(Pose pose)
     {
-        spawnedObject = Instantiate(placeablePrefab, pose.position, pose.rotation);
-        placedPrefabList.Add(spawnedObject);
+        if (placeablePrefab != null)
+        {
+            spawnedObject = Instantiate(placeablePrefab, pose.position, pose.rotation);
+            placedPrefabList.Add(spawnedObject);
+        }
     }
 }
