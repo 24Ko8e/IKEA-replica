@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
+using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(ARRaycastManager))]
 public class ObjectSpawner : MonoBehaviour
@@ -11,6 +12,7 @@ public class ObjectSpawner : MonoBehaviour
     GameObject spawnedObject;
 
     List<GameObject> placedPrefabList = new List<GameObject>();
+    public GameObject selectedObject;
 
     [SerializeField]
     GameObject placeablePrefab;
@@ -26,6 +28,11 @@ public class ObjectSpawner : MonoBehaviour
     {
         if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
         {
+            if (EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
+            {
+                touchPosition = default;
+                return false;
+            }
             touchPosition = Input.GetTouch(0).position;
             return true;
         }
@@ -41,10 +48,28 @@ public class ObjectSpawner : MonoBehaviour
             return;
         }
 
-        if (raycastManager.Raycast(touchPosition, hits, TrackableType.PlaneWithinPolygon))
+        Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
         {
-            var hitPose = hits[0].pose;
-            SpawnPrefab(hitPose);
+            if(hit.collider.tag == "Spawnable")
+            {
+                if (selectedObject != null)
+                {
+                    selectedObject.GetComponent<EditableObject>().DisableEditor();
+                }
+                selectedObject = hit.collider.gameObject;
+                selectedObject.GetComponent<EditableObject>().EnableEditor();
+                ObjectManager._instance.state = ObjectManager.State.ObjectEdit;
+            }
+            else if (raycastManager.Raycast(touchPosition, hits, TrackableType.PlaneWithinPolygon))
+            {
+                if (ObjectManager._instance.state == ObjectManager.State.ObjectPlacement)
+                {
+                    var hitPose = hits[0].pose;
+                    SpawnPrefab(hitPose);
+                }
+            }
         }
     }
 
