@@ -29,6 +29,9 @@ public class ObjectManager : MonoBehaviour
 
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
     }
 }
