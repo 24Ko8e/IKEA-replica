@@ -12,6 +12,8 @@ public class ObjectSpawner : MonoBehaviour
     GameObject spawnedObject;
 
     List<GameObject> placedPrefabList = new List<GameObject>();
+
+    [HideInInspector]
     public GameObject selectedObject;
 
     [SerializeField]

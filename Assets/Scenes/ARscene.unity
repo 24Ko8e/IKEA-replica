@@ -1112,7 +1112,7 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
@@ -1794,12 +1794,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2131ce4d5e28a3341963323c9fc1ac9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objSelectionButtons:
-  - {fileID: 47586918}
-  - {fileID: 1715266884}
-  - {fileID: 503612324}
-  - {fileID: 999170783}
-  - {fileID: 1637879151}
   selectedColor: {r: 0.25943398, g: 0.65305215, b: 1, a: 1}
 --- !u!1 &1637879148
 GameObject:
@@ -2332,7 +2326,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_PlanePrefab: {fileID: 1899407017490460285, guid: b65913e0014ca6b489f3efba4fbc3839, type: 3}
-  m_DetectionMode: -1
+  m_DetectionMode: 1
 --- !u!114 &1790699894
 MonoBehaviour:
   m_ObjectHideFlags: 0
