@@ -43,7 +43,13 @@ public class EditableObject : MonoBehaviour
         editorCanvas.SetActive(false);
     }
 
-    [ContextMenu("Create Buttons")]
+    [ContextMenu("Editor Test")]
+    void EditorTest()
+    {
+        editorCanvas.SetActive(true);
+        SetupButtons();
+    }
+
     private void SetupButtons()
     {
         if (buttons.Count > 0)
@@ -62,8 +68,9 @@ public class EditableObject : MonoBehaviour
                 btn.transform.localScale = Vector3.one;
                 btn.GetComponent<onBtnClick>().SetEditableObject(editObject);
                 btn.GetComponent<onBtnClick>().SetTexture(colors[i]);
+                btn.transform.GetChild(0).GetComponent<Image>().color = colors[i];
                 btn.GetComponent<onBtnClick>().selectedObject = this;
-                btn.transform.GetChild(0).GetComponent<Text>().text = "Color" + (i + 1);
+                //btn.transform.GetChild(0).GetComponent<Text>().text = "Color" + (i + 1);
             }
         }
     }

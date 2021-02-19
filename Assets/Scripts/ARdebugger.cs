@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class ARdebugger : MonoBehaviour
 {
     static string debugText;
+    static float timer;
     void Start()
     {
         if (!Debug.isDebugBuild)
@@ -19,10 +20,25 @@ public class ARdebugger : MonoBehaviour
         {
             GetComponent<Text>().text = debugText;
         }
+
+        if (timer > 0)
+        {
+            timer -= Time.deltaTime;
+        }
+        else
+        {
+            debugText = "";
+        }
     }
 
     public static void printAR(string message)
     {
         debugText = message;
+        timer = 2f;
+    }
+
+    void disableText()
+    {
+        debugText = "";
     }
 }
