@@ -19,18 +19,9 @@ public class PlaneDetectionToggle : MonoBehaviour
         
     }
 
-    public void TogglePlaneDetection()
+    public void TogglePlaneDetection(bool value)
     {
-        planeManager.enabled = !planeManager.enabled;
-
-        if (planeManager.enabled)
-        {
-            SetAllPlanesActive(true);
-        }
-        else
-        {
-            SetAllPlanesActive(false);
-        }
+        SetAllPlanesActive(value);
     }
 
     void SetAllPlanesActive(bool value)
