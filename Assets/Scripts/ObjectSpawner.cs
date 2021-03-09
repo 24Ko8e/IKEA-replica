@@ -19,11 +19,19 @@ public class ObjectSpawner : MonoBehaviour
     [SerializeField]
     GameObject placeablePrefab;
 
+    [SerializeField]
+    GameObject plane;
+
     static List<ARRaycastHit> hits = new List<ARRaycastHit>();
 
     private void Awake()
     {
         raycastManager = GetComponent<ARRaycastManager>();
+    }
+
+    private void Start()
+    {
+        plane.transform.Translate(Vector3.down * 1.7f);
     }
 
     bool TryGetTouchPosition(out Vector2 touchPosition)
@@ -64,13 +72,14 @@ public class ObjectSpawner : MonoBehaviour
                 selectedObject.GetComponent<EditableObject>().EnableEditor();
                 ObjectManager._instance.state = ObjectManager.State.ObjectEdit;
             }
-            else if (raycastManager.Raycast(touchPosition, hits, TrackableType.PlaneWithinPolygon))
+            else if (hit.collider.tag == "Plane")
             {
-                if (ObjectManager._instance.state == ObjectManager.State.ObjectPlacement)
-                {
-                    var hitPose = hits[0].pose;
-                    SpawnPrefab(hitPose);
-                }
+                //if (ObjectManager._instance.state == ObjectManager.State.ObjectPlacement)
+                //{
+                //    var hitPose = hits[0].pose;
+                //    SpawnPrefab(hitPose);
+                //}
+                SpawnPrefab(hit.point);
             }
         }
     }
@@ -85,6 +94,15 @@ public class ObjectSpawner : MonoBehaviour
         if (placeablePrefab != null)
         {
             spawnedObject = Instantiate(placeablePrefab, pose.position, pose.rotation);
+            placedPrefabList.Add(spawnedObject);
+        }
+    }
+    
+    public void SpawnPrefab(Vector3 position)
+    {
+        if (placeablePrefab != null)
+        {
+            spawnedObject = Instantiate(placeablePrefab, position, Quaternion.identity);
             placedPrefabList.Add(spawnedObject);
         }
     }
