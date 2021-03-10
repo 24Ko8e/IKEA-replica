@@ -22,16 +22,22 @@ public class ObjectSpawner : MonoBehaviour
     [SerializeField]
     GameObject plane;
 
+    Camera m_camera;
+
+    bool bFloorIsCalibrated = false;
+    public GameObject instructions;
+
     static List<ARRaycastHit> hits = new List<ARRaycastHit>();
 
     private void Awake()
     {
         raycastManager = GetComponent<ARRaycastManager>();
+        m_camera = Camera.main;
     }
 
     private void Start()
     {
-        plane.transform.Translate(Vector3.down * 1.7f);
+        bFloorIsCalibrated = false;
     }
 
     bool TryGetTouchPosition(out Vector2 touchPosition)
@@ -53,6 +59,35 @@ public class ObjectSpawner : MonoBehaviour
 
     private void Update()
     {
+        //ARdebugger.printAR((m_camera.transform.position.y).ToString("F2"));
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            Ray testRay = m_camera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit testHit;
+            if (Physics.Raycast(testRay, out testHit))
+            {
+                if (testHit.collider.tag == "Plane" && bFloorIsCalibrated)
+                    SpawnPrefab(testHit.point);
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            CalibrateFloor();
+        }
+
+        if (bFloorIsCalibrated)
+        {
+            //plane.transform.position = new Vector3(m_camera.transform.position.x, plane.transform.position.y, m_camera.transform.position.z);
+        }
+        else
+        {
+            if (m_camera.transform.position.y < plane.transform.position.y)
+            {
+                //plane.transform.position = new Vector3(plane.transform.position.x, m_camera.transform.position.y, plane.transform.position.z);
+            }
+        }
+
         if (!TryGetTouchPosition(out Vector2 touchPosition))
         {
             return;
@@ -72,7 +107,7 @@ public class ObjectSpawner : MonoBehaviour
                 selectedObject.GetComponent<EditableObject>().EnableEditor();
                 ObjectManager._instance.state = ObjectManager.State.ObjectEdit;
             }
-            else if (hit.collider.tag == "Plane")
+            else if (hit.collider.tag == "Plane" && bFloorIsCalibrated)
             {
                 //if (ObjectManager._instance.state == ObjectManager.State.ObjectPlacement)
                 //{
@@ -82,6 +117,14 @@ public class ObjectSpawner : MonoBehaviour
                 SpawnPrefab(hit.point);
             }
         }
+    }
+
+    public void CalibrateFloor()
+    {
+        bFloorIsCalibrated = true;
+        instructions.SetActive(false);
+        plane.transform.parent = null;
+        plane.transform.rotation = Quaternion.identity;
     }
 
     public void SetSpawnableObject(GameObject prefab)
